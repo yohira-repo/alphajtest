@@ -23,7 +23,7 @@ public class Assignment1 {
             if (input.length() != 10 
             || !input.substring(4,5).equals("/") 
             || !input.substring(7,8).equals("/")) {
-                System.out.println("Invalid date format. Please enter in YYYY/MM/DD format.");
+                System.out.println("日付形式が誤っています。YYYY/MM/DD形式で入力してください。");
                 continue;
             }
             // 年月日の文字列を分割
@@ -36,13 +36,13 @@ public class Assignment1 {
                 int birthDay = Integer.parseInt(inDay);
                 // 年月日の範囲チェック
                 if (birthMonth < 1 || birthMonth > 12) {
-                    System.out.println("Invalid month. Please enter a month between 1 and 12.");
+                    System.out.println("無効な月です。1から12の間で入力してください。");
                     continue;
                 }
                 int age = calcYearsOld(birthYear, birthMonth, birthDay);
                 System.out.println("あなたの年齢は " + age + " 歳です。");
             } catch (NumberFormatException e) {
-                System.out.println("Invalid date format. Please enter in YYYY/MM/DD format.");
+                System.out.println("日付形式が誤っています。YYYY/MM/DD形式で入力してください。");
             }
         }
         in.close();
