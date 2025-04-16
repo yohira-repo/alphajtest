@@ -4,7 +4,7 @@ public class ProductBean {
     private String productName;
     private int productPrice;
     private int productStock;
-
+    
     public void setProductName(String productName) {
         this.productName = productName;
     }
@@ -23,4 +23,5 @@ public class ProductBean {
     public int getProductStock() {
         return productStock;
     }
+
 }

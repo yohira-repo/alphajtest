@@ -5,19 +5,21 @@ import java.util.Scanner;
 import com.alphacmc.alphajtest.bean.ProductBean;
 
 public class Assignment2 {
-    public static void main(String[] args) {
-        Assignment2 assignment = new Assignment2();
-        assignment.consoleInput();
-        assignment.seach();
-
-    }
 
     // 商品マスタ
     private ProductBean[] productList = new ProductBean[100];
     // 商品マスタカウンター
     private int productCount = 0;
 
+    public static void main(String[] args) {
+        Assignment2 assignment = new Assignment2();
+        assignment.consoleInput();
+        assignment.seach();
 
+    }
+    /**
+     * 商品情報の登録
+     */
     public void consoleInput() {
         Scanner in = new Scanner(System.in);
         while(true) {
@@ -89,7 +91,34 @@ public class Assignment2 {
         in.close();
     }
 
+    /**
+     * 商品情報の検索
+     */
     public void seach() {
-        consoleInput();
+        Scanner in = new Scanner(System.in);
+        while(true) {
+            System.out.print("検索する商品名を入力してください: ");
+            String searchName = in.nextLine();
+            if (searchName.length() == 0) {
+                continue;
+            }
+            if ("END".equals(searchName)) {
+                System.out.println("終了します。");
+                break;
+            }
+            boolean found = false;
+            for (int i = 0; i < productCount; i++) {
+                if (productList[i] != null && productList[i].getProductName().startsWith(searchName)) {
+                    System.out.println("商品名: " + productList[i].getProductName() +
+                                       ", 価格: " + productList[i].getProductPrice() +
+                                       ", 在庫: " + productList[i].getProductStock());
+                    found = true;
+                }
+            }
+            if (!found) {
+                System.out.println("商品が見つかりませんでした: " + searchName);
+            }
+        }
+        in.close();
     }
 }
