@@ -10,22 +10,27 @@ public class Assignment2 {
     private ProductBean[] productList = new ProductBean[100];
     // 商品マスタカウンター
     private int productCount = 0;
+    // キーボード入力用
+    public Scanner in = new Scanner(System.in);
 
+    /**
+     * 商品情報の登録と検索を行うメインメソッド
+     * @param args コマンドライン引数
+     */
     public static void main(String[] args) {
         Assignment2 assignment = new Assignment2();
         assignment.consoleInput();
         assignment.seach();
-
+        assignment.in.close();
     }
     /**
      * 商品情報の登録
      */
     public void consoleInput() {
-        Scanner in = new Scanner(System.in);
         while(true) {
             // 商品名の入力
             System.out.print("商品名を入力してください: ");
-            String input = in.nextLine();
+            String input = this.in.nextLine();
             if (input.length() == 0) {
                 System.out.println("再度入力してください。");
                 continue;
@@ -33,7 +38,7 @@ public class Assignment2 {
             String productName = input;
             // 商品価格の入力
             System.out.print("商品価格を入力してください: ");
-            String inputPrice = in.nextLine();
+            String inputPrice = this.in.nextLine();
             if (inputPrice.length() == 0) {
                 System.out.println("再度入力してください。");
                 continue;
@@ -43,7 +48,7 @@ public class Assignment2 {
 
             // 商品在庫の入力
             System.out.print("商品在庫を入力してください: ");
-            String inputStock = in.nextLine();
+            String inputStock = this.in.nextLine();
             if (inputStock.length() == 0) {
                 System.out.println("再度入力してください。");
                 continue;
@@ -78,7 +83,7 @@ public class Assignment2 {
                 break;
             }
             // 登録継続確認
-            System.out.print("商品情報を登録しますか？(y/n): ");
+            System.out.print("商品登録を継続しますか？(y/n): ");
             String continueInput = in.nextLine();   
             if (continueInput.equalsIgnoreCase("y")) {
                 System.out.println("登録を続けます。");
@@ -88,17 +93,15 @@ public class Assignment2 {
                 break;
             }
         }
-        in.close();
     }
 
     /**
      * 商品情報の検索
      */
     public void seach() {
-        Scanner in = new Scanner(System.in);
         while(true) {
             System.out.print("検索する商品名を入力してください: ");
-            String searchName = in.nextLine();
+            String searchName = this.in.nextLine();
             if (searchName.length() == 0) {
                 continue;
             }
@@ -119,6 +122,5 @@ public class Assignment2 {
                 System.out.println("商品が見つかりませんでした: " + searchName);
             }
         }
-        in.close();
     }
 }
