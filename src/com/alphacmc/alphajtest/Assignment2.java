@@ -43,8 +43,12 @@ public class Assignment2 {
                 System.out.println("再度入力してください。");
                 continue;
             }
-            // TODO:商品価格の数値チェック
-            int productPrice = Integer.parseInt(inputPrice);
+            // 商品価格の数値チェック
+            Integer productPrice = checkNumber(inputPrice);
+            if (productPrice == null) {
+                System.out.println("数値を入力してください。");
+                continue;
+            }
 
             // 商品在庫の入力
             System.out.print("商品在庫を入力してください: ");
@@ -53,8 +57,12 @@ public class Assignment2 {
                 System.out.println("再度入力してください。");
                 continue;
             }
-            // TODO:商品在庫の数値チェック
-            int productStock = Integer.parseInt(inputStock);
+            // 商品在庫の数値チェック
+            Integer productStock = checkNumber(inputStock);
+            if (productStock == null) {
+                System.out.println("数値を入力してください。");
+                continue;
+            }
 
             // 商品名の重複チェック
             boolean isDuplicate = false;
@@ -71,8 +79,8 @@ public class Assignment2 {
             // 商品情報の登録
             ProductBean product = new ProductBean();
             product.setProductName(productName);
-            product.setProductPrice(productPrice);
-            product.setProductStock(productStock);
+            product.setProductPrice(productPrice.intValue());
+            product.setProductStock(productStock.intValue());
             // 商品マスタに登録
             productList[productCount] = product;
             productCount++;
@@ -121,6 +129,19 @@ public class Assignment2 {
             if (!found) {
                 System.out.println("商品が見つかりませんでした: " + searchName);
             }
+        }
+    }
+
+    /**
+     * 数値チェックメソッド
+     * @param str
+     * @return  数値に変換できた場合はその数値、できなかった場合はnull
+     */
+    Integer checkNumber(String str) {
+        try {
+            return Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+            return null;
         }
     }
 }
