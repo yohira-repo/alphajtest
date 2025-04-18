@@ -1,6 +1,7 @@
 package com.alphacmc.alphajtest.bean;
 
 public class ProductBean {
+    private int productId;
     private String productName;
     private int productPrice;
     private int productStock;
@@ -10,6 +11,9 @@ public class ProductBean {
     }
     public void setProductPrice(int productPrice) {
         this.productPrice = productPrice;
+    }
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
     public void setProductStock(int productStock) {
         this.productStock = productStock;
@@ -22,6 +26,9 @@ public class ProductBean {
     }
     public int getProductStock() {
         return productStock;
+    }
+    public int getProductId() {
+        return productId;
     }
 
 }
