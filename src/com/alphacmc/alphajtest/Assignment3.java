@@ -32,39 +32,50 @@ public class Assignment3 {
                 //カンマで分割した内容を配列に格納する
                 String[] data = line.split(",");
                 if (data.length < 4) {
-                    System.out.println("データ項目不足。");
+                    System.out.println("データ項目不足。count=" + count);
                     continue;
                 }
 
                 // 商品IDのチェック
                 String strProductId = data[0].trim();
-                Integer productId = checkInteger(strProductId);
+                Integer productId = checkInteger(strProductId, 9);
                 if (productId == null) {
-                    System.out.println("商品IDが不正です。");
+                    System.out.println("商品IDが不正です。count=" + count);
                     continue;
                 }
-                //TODO: 商品IDの重複チェック
+
                 // 商品名のチェック
                 String strProductName = data[1].trim();
-                if (strProductName == null || strProductName.isEmpty()) {
-                    System.out.println("商品名が不正です。");
+                strProductName = checkString(strProductName, 12);
+                if (strProductName == null) {
+                    System.out.println("商品名が不正です。count=" + count);
                     continue;
                 }
-                // TODO:商品名の長さチェック
-                // TODO:商品価格の桁数チェック
+ 
                 // 商品価格のチェック
-                Integer productPrice = checkInteger(data[2].trim());
+                Integer productPrice = checkInteger(data[2].trim(), 9);
                 if (productPrice == null) {
-                    System.out.println("商品価格が不正です。");
+                    System.out.println("商品価格が不正です。count=" + count);
                     continue;
                 }
-                // TODO:商品在庫数の桁数チェック
                 // 商品在庫数のチェック
-                Integer productStock = checkInteger(data[3].trim());
+                Integer productStock = checkInteger(data[3].trim(), 9);
                 if (productStock == null) {
-                    System.out.println("商品在庫数が不正です。");
+                    System.out.println("商品在庫数が不正です。count=" + count);
                     continue;
                 }
+
+                // 商品IDの重複チェック
+                for (ProductBean existingProduct : products) {
+                    if (existingProduct.getProductId() == productId.intValue()) {
+                        System.out.println("商品IDが重複しています。" + productId);
+                        existingProduct.setProductName(strProductName);
+                        existingProduct.setProductPrice(productPrice.intValue());
+                        existingProduct.setProductStock(productStock.intValue());
+                        break;
+                    }
+                }
+
                 ProductBean product = new ProductBean();
                 product.setProductId(productId.intValue());
                 product.setProductName(strProductName);
@@ -85,27 +96,34 @@ public class Assignment3 {
             System.out.println("商品ID:" + product.getProductId() + " 商品名:" + product.getProductName() + " 商品価格:"
                     + product.getProductPrice() + " 商品在庫数:" + product.getProductStock());
         }
+    }
 
-ß    }
+    /**
+     * 文字列桁数のチェック
+     * @param str
+     * @return
+     */
+    private String checkString(String str, int maxLength) {
+        if (str == null || str.isEmpty() || str.length() > maxLength) {
+            return null;
+        }
+        return str;
+    }
 
-    private Integer checkInteger(String str) {
+    /**
+     * 整数桁数のチェック
+     * @param str
+     * @return
+     */
+    private Integer checkInteger(String str, int maxLength) {
+        if (str == null || str.isEmpty() || str.length() > maxLength) {
+            return null;
+        }
         try {
             return Integer.parseInt(str);
         } catch (NumberFormatException e) {
             return null;
         }
     }
-
-    /**
-     * 文字列のチェック
-     * @param str
-     * @return
-     */
-    private String checkString(String str) {
-        if (str == null || str.isEmpty()) {
-            return null;
-        }
-        return str;
-    }
-
+    
 }
