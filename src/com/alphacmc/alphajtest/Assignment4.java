@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
 
@@ -78,21 +79,12 @@ public class Assignment4 {
                     System.out.println("生年月日が不正です。count=" + count);
                     continue;
                 }
-                if (!birthDate.matches("\\d{4}/\\d{2}/\\d{2}")) {
-                    System.out.println("生年月日が不正です。count=" + count);
-                    continue;
-                }
-                // 実在日付のチェック（簡易版）
-                String[] birthDateParts = birthDate.split("/");
-                int year = Integer.parseInt(birthDateParts[0]);
-                int month = Integer.parseInt(birthDateParts[1]);
-                int day = Integer.parseInt(birthDateParts[2]);
-                if (month < 1 || month > 12 || day < 1 || day > 31) {
+                // 日付のチェック
+                birthDate = checkDate(birthDate);
+                if (birthDate == null) {
                     System.out.println("生年月日が不正です。count=" + count + "  社員コード=" + employeeId + "  生年月日=" + birthDate);
                     continue;
                 }
-                // 生年月日文字列を作成(-を抜く)
-                birthDate = birthDate.replaceAll("/", "");
                 
                 // 性別のチェック
                 String gender = data[2].trim();
@@ -109,17 +101,12 @@ public class Assignment4 {
                     System.out.println("入社年月日が不正です。count=" + count + "  社員コード=" + employeeId + "  入社年月日=" + joinDate);
                     continue;
                 }
-                // 入社年月日が実在日付かどうかのチェック（簡易版）
-                String[] joinDateParts = joinDate.split("/");
-                int joinYear = Integer.parseInt(joinDateParts[0]);
-                int joinMonth = Integer.parseInt(joinDateParts[1]);
-                int joinDay = Integer.parseInt(joinDateParts[2]);
-                if (joinMonth < 1 || joinMonth > 12 || joinDay < 1 || joinDay > 31) {
+                // 日付のチェック
+                joinDate = checkDate(joinDate);
+                if (joinDate == null) {
                     System.out.println("入社年月日が不正です。count=" + count + "  社員コード=" + employeeId + "  入社年月日=" + joinDate);
                     continue;
                 }
-                // 入社年月日文字列を作成(-を抜く)
-                joinDate = joinDate.replaceAll("/", "");
 
                 // 郵便番号のチェック
                 String postalCode = data[4].trim();
@@ -200,8 +187,6 @@ public class Assignment4 {
         writeCSV(employeeContractList, FILE_NAME_CONTRACT);
     }
 
-
-
     /**
      * 文字列桁数のチェック
      * @param str
@@ -229,13 +214,43 @@ public class Assignment4 {
             return null;
         }
     }
-   
-    private String employeeToCSV(EmployeeBean employee) {
-        return String.join(",", employee.getEmployeeId(), employee.getBirthDate(), employee.getGender(),
-                employee.getJoinDate(), employee.getPostalCode(), employee.getAddress(), employee.getEmailAddress(),
-                   employee.getPhoneNumber());
+
+    /**
+     * 日付のチェック
+     * @param str
+     * @return
+     */
+    private String checkDate(String str) {
+        if (str == null || str.isEmpty() || str.length() != 10) {
+            return null;
+        }
+        if (!str.matches("\\d{4}/\\d{2}/\\d{2}")) {
+            return null;
+        }
+        // 実在日付のチェック
+        try {
+            String[] dateParts = str.split("/");
+            int year = Integer.parseInt(dateParts[0]);
+            int month = Integer.parseInt(dateParts[1]);
+            int day = Integer.parseInt(dateParts[2]);
+            Calendar cal = Calendar.getInstance();
+            // 厳密な日付チェックを有効にする
+            cal.setLenient(false); 
+            // 月は0から始まるので-1する 
+            cal.set(year, month - 1, day); 
+            // 日付を取得して例外が発生しないか確認
+            cal.getTime(); 
+        } catch (IllegalArgumentException e) {
+            return null; // 日付が不正な場合はnullを返す
+        }
+        return str.replaceAll("/", "");       
     }
 
+    /**
+     * 社員マスタのCSVファイルを出力する
+     * @param employeeList
+     * @param fileName
+     */
     private void writeCSV(List<EmployeeBean> employeeList, String fileName) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
             // 社員コード順にソート
@@ -245,7 +260,12 @@ public class Assignment4 {
             bw.newLine();
             // データ行の書き込み
             for (EmployeeBean employee : employeeList) {
-                bw.write(employeeToCSV(employee));
+                String line = String.join(",", employee.getEmployeeId(), employee.getBirthDate(), employee.getGender(),
+                employee.getJoinDate(), employee.getPostalCode(), employee.getAddress(), employee.getEmailAddress(),
+                   employee.getPhoneNumber());
+                // 1行ずつ書き込み   
+                bw.write(line);
+                // 改行コードの書き込み
                 bw.newLine();
             }
         } catch (IOException e) {
