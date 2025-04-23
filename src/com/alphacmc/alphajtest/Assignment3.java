@@ -66,22 +66,26 @@ public class Assignment3 {
                 }
 
                 // 商品IDの重複チェック
+                boolean isDuplicate = false;
                 for (ProductBean existingProduct : products) {
                     if (existingProduct.getProductId() == productId.intValue()) {
                         System.out.println("商品IDが重複しています。" + productId);
                         existingProduct.setProductName(strProductName);
                         existingProduct.setProductPrice(productPrice.intValue());
                         existingProduct.setProductStock(productStock.intValue());
+                        isDuplicate = true;
                         break;
                     }
                 }
-
-                ProductBean product = new ProductBean();
-                product.setProductId(productId.intValue());
-                product.setProductName(strProductName);
-                product.setProductPrice(productPrice.intValue());
-                product.setProductStock(productStock.intValue());
-                products.add(product);
+                // 重複していない場合は新規追加
+                if (!isDuplicate) {
+                    ProductBean product = new ProductBean();
+                    product.setProductId(productId.intValue());
+                    product.setProductName(strProductName);
+                    product.setProductPrice(productPrice.intValue());
+                    product.setProductStock(productStock.intValue());
+                    products.add(product);
+                }
             }
             System.out.println("CSVファイルレコードカウント:" + count);
         // 例外処理（ファイルが見つからない？など）
