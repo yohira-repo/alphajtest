@@ -211,13 +211,14 @@ public class Assignment5 {
             int numberOfCoin = remChange / COIN_ARRAY[i];
             // まだ残るお釣り金額
             // remChange = remChange % COIN_ARRAY[i]; <= つり銭切れを考慮しないケース
+            // 残り枚数がない場合は次のコインへ
+            if (numberOfCoin == 0) {
+                continue;
+            }
             // 売上配列から必要コイン枚数分あるかチェック
             for (int j = 0; j < salesContList.size(); j++) {
                 int sales = salesContList.get(j);
-                // 残り枚数がない場合は次のコインへ
-                if (numberOfCoin == 0) {
-                    break;
-                }
+
                 // 該当金額をつり銭コインリストに追加
                 if (sales == COIN_ARRAY[i]) {
                     // 売上金リストに仮払いマークを付与
@@ -228,6 +229,10 @@ public class Assignment5 {
                     numberOfCoin--;
                     // お釣りの残金
                     remChange -= sales;
+                }
+                // 残り枚数がない場合は次のコインへ
+                if (numberOfCoin == 0) {
+                    break;
                 }
             }
             // お釣りの残りがない場合終了
