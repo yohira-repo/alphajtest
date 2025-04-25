@@ -40,24 +40,29 @@ public class Assignment5 {
     // 商品在庫監視タスク
     private TimerTask stockCheckTask = new TimerTask() {
         public void run() {
-            System.out.println("タスクが実行されました。");
+            System.out.println("商品在庫監視タスクが実行されました。");
+            // 商品在庫のチェック
+            for (ProductBean product : productList) {
+                if (product.getProductStock() <= 10) {
+                    System.out.println("商品 " + product.getProductName() + " の在庫が少なくなりました。注文してください。");
+                }
+            }
        }
     };
 
     // Method to print a message
     public void venderMachine() {
         // TODO:商品リストの構築(csvファイルから読み込む)
-        timer.schedule(this.csvTask, 3000);
-        timer.schedule(this.stockCheckTask, 3000);
+        timer.schedule(this.csvTask, 3000, 10000);
+        // 商品リストの取得タスクをスケジュール);
+        timer.schedule(this.stockCheckTask, 60000, 0);
 
         while (isEnd) {
             // 商品選択
-            ProductBean productBean = selectProduct();
-            // 商品選択完了
-            System.out.println("商品選択完了: " + productBean.getProductName() + " - " + productBean.getProductPrice() + "円");
+            int productPrice = selectProduct();
 
             // 投入コインの選択
-            List<Integer> inputCoinList = getInputMony(productBean.getProductPrice());
+            List<Integer> inputCoinList = getInputMony(productPrice);
             // 投入コインの合計金額を計算
             int inputTotal = 0;
             for (Integer coin : inputCoinList) {
@@ -66,7 +71,7 @@ public class Assignment5 {
             // 投入コインの合計金額を表示
             System.out.println("投入コインの合計金額: " + inputTotal + "円");
             // お釣りの金額
-            int changeTotal =  productBean.getProductPrice() - inputTotal;
+            int changeTotal =  productPrice - inputTotal;
             if (changeTotal == 0) {
                 System.out.println("お釣りはありません。");
                 // 投入コインを売上コインリストに追加
@@ -107,9 +112,10 @@ public class Assignment5 {
 
     /**
      * 商品選択
-     * @return
+     * @return 選択商品価格
+     * 
      */
-    private ProductBean selectProduct() {
+    private int selectProduct() {
         ProductBean selectProductBean = null;
         while(selectProductBean == null) {
             // 商品リストの表示
@@ -142,8 +148,9 @@ public class Assignment5 {
                 }
             }
         }
-
-        return selectProductBean;
+        // 商品選択完了
+        System.out.println("商品選択完了: " + selectProductBean.getProductName() + " - " + selectProductBean.getProductPrice() + "円");
+        return selectProductBean.getProductPrice();
     }
 
     /**
