@@ -7,6 +7,7 @@ import java.util.TimerTask;
 import java.util.Scanner;
 
 import com.alphacmc.alphajtest.bean.ProductBean;
+import com.alphacmc.alphajtest.csv.ProductCsvLoader;
 import com.alphacmc.alphajtest.exception.OutOfChangeException;
 
 public class Assignment5 {
@@ -26,13 +27,22 @@ public class Assignment5 {
     // Timer Object to schedule tasks
     private Timer timer = new Timer();
 
+    // 商品リストの取得
+    private ProductCsvLoader productCsvLoader = new ProductCsvLoader();
+
     // 商品リストの取得タスク
     private TimerTask csvTask = new TimerTask() {
         public void run() {
             // 商品リストフラグ待ち合わせ
             waitProductListAccess ();
             isProductListAccess = true;
-            System.out.println("タスクが実行されました。");
+            List<ProductBean> productBeans = productCsvLoader.getProducts("src/com/alphacmc/alphajtest/csv/product.csv");
+            // 商品リストの取得
+            if (productBeans != null) {
+                productList = productBeans;
+                System.out.println("商品リストの取得が完了しました。");
+            }
+            System.out.println("商品リストの取得タスクが実行されました。");
             isProductListAccess = false;
         }
     };
@@ -40,19 +50,19 @@ public class Assignment5 {
     // 商品在庫監視タスク
     private TimerTask stockCheckTask = new TimerTask() {
         public void run() {
-            System.out.println("商品在庫監視タスクが実行されました。");
             // 商品在庫のチェック
             for (ProductBean product : productList) {
                 if (product.getProductStock() <= 10) {
                     System.out.println("商品 " + product.getProductName() + " の在庫が少なくなりました。注文してください。");
                 }
             }
-       }
+            System.out.println("商品在庫監視タスクが実行されました。");
+        }
     };
 
     // Method to print a message
     public void venderMachine() {
-        // TODO:商品リストの構築(csvファイルから読み込む)
+        // 商品リストの構築(csvファイルから読み込む)
         timer.schedule(this.csvTask, 3000, 10000);
         // 商品リストの取得タスクをスケジュール);
         timer.schedule(this.stockCheckTask, 60000, 0);
