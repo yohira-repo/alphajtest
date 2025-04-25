@@ -7,16 +7,13 @@ import java.util.TimerTask;
 import java.util.Scanner;
 
 import com.alphacmc.alphajtest.bean.ProductBean;
+import com.alphacmc.alphajtest.exception.OutOfChangeException;
 
 public class Assignment5 {
     // コインの種類
     private static final int[] COIN_ARRAY = {500, 100, 50, 10, 5, 1};
-    // 投入コインのリスト    
-    private List<Integer> inputCoinList = new ArrayList<>();
     // 売上コインのリスト
     private List<Integer> salesContList = new ArrayList<>();
-    // お釣りコインのリスト
-    private List<Integer> changeCoinList = new ArrayList<>();
     // 商品リスト
     private List<ProductBean> productList = new ArrayList<>();
     // 商品リストのアクセス排他フラグ
@@ -60,54 +57,47 @@ public class Assignment5 {
             System.out.println("商品選択完了: " + productBean.getProductName() + " - " + productBean.getProductPrice() + "円");
 
             // 投入コインの選択
-            int inputTotal = getInputMony(productBean.getProductPrice());
+            List<Integer> inputCoinList = getInputMony(productBean.getProductPrice());
+            // 投入コインの合計金額を計算
+            int inputTotal = 0;
+            for (Integer coin : inputCoinList) {
+                inputTotal += coin.intValue();
+            }
             // 投入コインの合計金額を表示
             System.out.println("投入コインの合計金額: " + inputTotal + "円");
-            
-            // お釣りの計算
+            // お釣りの金額
             int changeTotal =  productBean.getProductPrice() - inputTotal;
             if (changeTotal == 0) {
                 System.out.println("お釣りはありません。");
-                changeCoinList.clear();
                 // 投入コインを売上コインリストに追加
                 for (Integer coin : inputCoinList) {
                     salesContList.add(coin);
                 }
                 continue;
             }
-            // お釣りの計算
-            if (getCalculateChange(changeTotal)) {
-                // 売上金リスト・コミット
-                for (int i = 0; i < salesContList.size(); i++) {
-                    int sales = salesContList.get(i);
-                    if (sales < 0) {
-                        salesContList.set(i, 0);
-                    }
-                }
+            // お釣りリスト         
+            List<Integer> changeCoinList = new ArrayList<Integer>();
+            try {
+                // お釣りの計算
+                changeCoinList = getCalculateChange(changeTotal);
                 // 投入コインを売上コインリストに追加
                 for (Integer coin : inputCoinList) {
                     salesContList.add(coin);
                 }
-            } else {
-                changeCoinList.clear();
+            } catch (OutOfChangeException e) {
+                System.out.println(e.getMessage());
                 // 投入コインをそのままつり銭リストに追加
+                changeCoinList.clear();
                 for (Integer coin : inputCoinList) {
                     changeCoinList.add(coin);
-                }
-                // 売上金リスト・ロールバック
-                for(int i = 0; i < salesContList.size(); i++ ) {
-                    int sales = salesContList.get(i);
-                    if (sales < 0) {
-                        salesContList.set(i, sales * -1);
-                    }
                 }
             }
             // つり銭リストの表示
             System.out.println("つり銭リストを表示します。");
-            for (int i = 0; i < changeCoinList.size(); i++) {
-                System.out.println(changeCoinList.get(i) + "円");
+            for (Integer coin : changeCoinList) {
+                System.out.println(coin + "円");
             }
-        }
+        }Integer coin : 
         // 入力終了
         scanner.close();
         // タイマータスクの停止
@@ -158,12 +148,14 @@ public class Assignment5 {
 
     /**
      * 投入コイン入力
-     * @return 投入コインの合計金額
+     * @return 投入コインのリスト
      */
-    private int getInputMony(int getProductPrice) {
+    private List<Integer> getInputMony(int getProductPrice) {
+        // 投入コインのリスト    
+        List<Integer> inputCoinList = new ArrayList<>();
+        // 投入コインの合計金額
         int inputTotal = 0;
-        // 投入コインのリストの初期化
-        inputCoinList.clear();
+        // 投入コインの合計金額が商品価格以上になるまでループ
         while(inputTotal < getProductPrice) {
             // 投入コインの選択
             System.out.print("投入コインを選択してください。");
@@ -193,15 +185,70 @@ public class Assignment5 {
                 inputTotal += coin.intValue();
             }
         }
-        return inputTotal;
+        // 投入コインリストを返却
+        return inputCoinList;
     }
 
-    private boolean getCalculateChange(int changeTotal) {
-        // TODO:お釣りの計算
+    /**
+     * お釣りの計算
+     * @param changeTotal お釣りの合計金額
+     * @return お釣りコインのリスト
+     */
+    private List<Integer> getCalculateChange(int changeTotal) throws OutOfChangeException {
+        // お釣りコインのリスト
+        List<Integer> changeCoinList = new ArrayList<>();
+        // お釣りの計算
+        int remChange = changeTotal;
+        for (int i = 0; i < COIN_ARRAY.length; i++) {
+            // 必要コイン枚数
+            int numberOfCoin = remChange / COIN_ARRAY[i];
+            // まだ残るお釣り金額
+            // remChange = remChange % COIN_ARRAY[i]; <= つり銭切れを考慮しないケース
+            // 売上配列から必要コイン枚数分あるかチェック
+            for (int j = 0; j < salesContList.size(); j++) {
+                int sales = salesContList.get(j);
+                // 残り枚数がない場合は次のコインへ
+                if (numberOfCoin == 0) {
+                    break;
+                }
+                // 該当金額をつり銭コインリストに追加
+                if (sales == COIN_ARRAY[i]) {
+                    // 売上金リストに仮払いマークを付与
+                    salesContList.set(j, sales * -1);
+                    // お釣りコインリストに追加
+                    changeCoinList.add(sales);
+                    // 残り枚数を減らす
+                    numberOfCoin--;
+                    // お釣りの残金
+                    remChange -= sales;
+                }
+            }
+            // お釣りの残りがない場合終了
+            if (remChange == 0) {
+                break;
+            }
+        }
+        // お釣りが残っている場合はつり銭切れ
+        if (remChange > 0) {
+            // 売上金リストに仮払いマークをロールバック
+            for (int i = 0; i < salesContList.size(); i++) {
+                int sales = salesContList.get(i);
+                if (sales < 0) {
+                    salesContList.set(i, sales * -1);
+                }
+            }
+            // お釣りが足りない場合は例外をスロー
+            throw new OutOfChangeException("お釣りが足りません。");
+        }
+        // 売上金リストに仮払いマークをコミット
+        for (int i = 0; i < salesContList.size(); i++) {
+            int sales = salesContList.get(i);
+            if (sales < 0) {
+                salesContList.set(i, 0);
+            }
+        }
 
-        // TODO:お釣り銭切れの処判定
-
-        return false;
+        return changeCoinList;
     }
 
     // 商品リストアクセスフラグ待ち合わせ
