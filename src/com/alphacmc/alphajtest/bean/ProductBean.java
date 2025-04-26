@@ -1,10 +1,10 @@
 package com.alphacmc.alphajtest.bean;
 
 public class ProductBean {
-    private int productId;
-    private String productName;
-    private int productPrice;
-    private int productStock;
+    private int productId = 0;
+    private String productName = null;
+    private int productPrice = 0;
+    private int productStock = 0;
     
     public void setProductName(String productName) {
         this.productName = productName;

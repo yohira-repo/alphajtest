@@ -13,6 +13,7 @@ import com.alphacmc.alphajtest.exception.OutOfChangeException;
 public class Assignment5 {
     // コインの種類
     private static final int[] COIN_ARRAY = {500, 100, 50, 10, 5, 1};
+    private static final String CSV_FILE_NAME = "src/com/alphacmc/alphajtest/csv/product.csv";
     // 売上コインのリスト
     private List<Integer> salesContList = new ArrayList<>();
     // 商品リスト
@@ -36,11 +37,11 @@ public class Assignment5 {
             // 商品リストフラグ待ち合わせ
             waitProductListAccess ();
             isProductListAccess = true;
-            List<ProductBean> productBeans = productCsvLoader.getProducts("src/com/alphacmc/alphajtest/csv/product.csv");
-            // 商品リストの取得
-            if (productBeans != null) {
-                productList = productBeans;
-                System.out.println("商品リストの取得が完了しました。");
+            try {
+                // 商品リストの取得
+                boolean isLoad = productCsvLoader.getProducts(CSV_FILE_NAME, productList, salesContList);
+            } catch (Exception e) {
+                System.out.println("商品リストの取得に失敗しました。");
             }
             System.out.println("商品リストの取得タスクが実行されました。");
             isProductListAccess = false;
