@@ -40,6 +40,7 @@ public class Assignment5 {
             try {
                 // 商品リストの取得
                 boolean isLoad = productCsvLoader.getProducts(CSV_FILE_NAME, productList, salesContList);
+                // TODO:メッセージ
             } catch (Exception e) {
                 System.out.println("商品リストの取得に失敗しました。");
             }
@@ -113,7 +114,7 @@ public class Assignment5 {
             for (Integer coin : changeCoinList) {
                 System.out.println(coin + "円");
             }
-        }Integer coin : 
+        } 
         // 入力終了
         scanner.close();
         // タイマータスクの停止
