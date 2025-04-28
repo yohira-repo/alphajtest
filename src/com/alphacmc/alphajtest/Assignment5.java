@@ -133,7 +133,6 @@ public class Assignment5 {
         ProductBean selectProductBean = null;
         while(selectProductBean == null) {
             // 商品リストの表示
-            waitProductListAccess ();
             System.out.println("商品リストを表示します。");
             productList.sort((p1, p2) -> Integer.compare(p1.getProductId(), p2.getProductId()));
 
