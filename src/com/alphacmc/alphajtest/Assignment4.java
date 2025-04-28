@@ -15,9 +15,9 @@ import com.alphacmc.alphajtest.bean.ProductBean;
 
 public class Assignment4 {
 
-    private static final String FILE_NAME_ALL = "C:\\Users\\alphauser\\git\\alphajtest\\data\\社員情報ファイル.csv";
-    private static final String FILE_NAME_FULLTIME = "C:\\Users\\alphauser\\git\\alphajtest\\data\\正社員マスタ.csv";
-    private static final String FILE_NAME_CONTRACT = "C:\\Users\\alphauser\\git\\alphajtest\\data\\契約社員マスタ.csv";
+    private static final String FILE_NAME_ALL = "C:\\Users\\alphauser\\git\\alphajtest\\data\\課題4_社員情報ファイル.csv";
+    private static final String FILE_NAME_FULLTIME = "C:\\Users\\alphauser\\git\\alphajtest\\data\\課題4_正社員マスタ.csv";
+    private static final String FILE_NAME_CONTRACT = "C:\\Users\\alphauser\\git\\alphajtest\\data\\課題4_契約社員マスタ.csv";
 
     // 正社員リスト
     private List<EmployeeBean> employeeFullList = new ArrayList<>();

@@ -10,7 +10,7 @@ import com.alphacmc.alphajtest.bean.ProductBean;
 
 public class Assignment3 {
 
-    private static final String FILE_NAME = "C:\\Users\\alphauser\\git\\alphajtest\\data\\商品リスト.csv";
+    private static final String FILE_NAME = "C:\\Users\\alphauser\\git\\alphajtest\\data\\課題3_商品リスト.csv";
     public static void main(String[] args) {
         Assignment3 assignment3 = new Assignment3();
         assignment3.getProducts();
