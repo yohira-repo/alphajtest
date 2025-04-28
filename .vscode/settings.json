@@ -1,5 +1,13 @@
 {
     "java.project.sourcePaths": [
         "src",
-    ]
-}
+    ],
+    "java.debug.settings.vmArgs": "-Dfile.encoding=UTF-8",
+    "java.configuration.runtimes": [
+      {
+        "name": "JavaSE-21",        // あなたの使っているJavaバージョンに合わせてください
+        "path": "C:/Program Files/Java/jdk-21", // インストールパスに合わせてください
+        "default": true,
+      }
+    ],
+  }

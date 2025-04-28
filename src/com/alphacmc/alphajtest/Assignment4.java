@@ -27,6 +27,7 @@ public class Assignment4 {
     public static void main(String[] args) {
         Assignment4 assignment4 = new Assignment4();
         assignment4.getEmployeeList();
+        assignment4.writeEmployeeList();
     }
 
     public void getEmployeeList() {
@@ -172,7 +173,7 @@ public class Assignment4 {
                     employeeContractList.add(employee);
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

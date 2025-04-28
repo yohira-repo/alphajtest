@@ -10,7 +10,7 @@ import com.alphacmc.alphajtest.bean.ProductBean;
 
 public class Assignment3 {
 
-    private static final String FILE_NAME = "商品マスタ.csv";
+    private static final String FILE_NAME = "C:\\Users\\alphauser\\git\\alphajtest\\data\\商品リスト.csv";
     public static void main(String[] args) {
         Assignment3 assignment3 = new Assignment3();
         assignment3.getProducts();
@@ -29,18 +29,22 @@ public class Assignment3 {
             while ((line = br.readLine()) != null) {
                 //カウンタをインクリメント
                 count++;
+                // ヘッダ行はスキップ
+                if (count == 1) {
+                    continue;
+                }
                 //カンマで分割した内容を配列に格納する
                 String[] data = line.split(",");
                 if (data.length < 4) {
                     System.out.println("データ項目不足。count=" + count);
                     continue;
                 }
-
+                System.out.println(line);
                 // 商品IDのチェック
                 String strProductId = data[0].trim();
                 Integer productId = checkInteger(strProductId, 9);
                 if (productId == null) {
-                    System.out.println("商品IDが不正です。count=" + count);
+                    System.out.println("商品IDが不正です。count=" + count + " strProductId=" + strProductId);
                     continue;
                 }
 
