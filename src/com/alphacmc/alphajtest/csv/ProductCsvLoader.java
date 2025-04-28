@@ -113,11 +113,12 @@ public class ProductCsvLoader {
         boolean isCoinUnit = false;
         for (int coin : COIN_ARRAY) {
             if (coinUnit == coin) {
+                isCoinUnit = true;
                 break;
             }
         }
         if (!isCoinUnit) {
-            System.out.println("無効なコイン単位です。");
+            System.out.println("無効なコイン単位です。 " + coinUnit);
         }
 
         // コインの枚数のチェック

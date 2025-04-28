@@ -13,7 +13,7 @@ import com.alphacmc.alphajtest.exception.OutOfChangeException;
 public class Assignment5 {
     // コインの種類
     private static final int[] COIN_ARRAY = {500, 100, 50, 10, 5, 1};
-    private static final String CSV_FILE_NAME = "src/com/alphacmc/alphajtest/csv/product.csv";
+    private static final String CSV_FILE_NAME = "C:\\Users\\alphauser\\git\\alphajtest\\data\\課題5_入力データ.csv";
     // 売上コインのリスト
     private List<Integer> salesContList = new ArrayList<>();
     // 商品リスト
@@ -21,7 +21,7 @@ public class Assignment5 {
     // 商品リストのアクセス排他フラグ
     private boolean isProductListAccess = false;
     // 処理終了フラグ
-    private boolean isEnd = false;
+    private boolean isContinue = true;
     // コンソール入力
     private Scanner scanner = new Scanner(System.in);
 
@@ -63,13 +63,15 @@ public class Assignment5 {
     };
 
     // Method to print a message
-    public void venderMachine() {
+    public void venderMachine() throws Exception {
         // 商品リストの構築(csvファイルから読み込む)
-        timer.schedule(this.csvTask, 3000, 10000);
+        timer.schedule(this.csvTask, 0, 3000000);
         // 商品リストの取得タスクをスケジュール);
-        timer.schedule(this.stockCheckTask, 60000, 0);
+        timer.schedule(this.stockCheckTask, 600000, 300000);
+        Thread.sleep(10000);
+        waitProductListAccess ();
 
-        while (isEnd) {
+        while (isContinue) {
             // 商品選択
             int productPrice = selectProduct();
 
@@ -133,6 +135,8 @@ public class Assignment5 {
             // 商品リストの表示
             waitProductListAccess ();
             System.out.println("商品リストを表示します。");
+            productList.sort((p1, p2) -> Integer.compare(p1.getProductId(), p2.getProductId()));
+
             for (ProductBean product : productList) {
                 System.out.println(product.getProductId() + ": " + product.getProductName() + " - " + product.getProductPrice() + "円");
             }
@@ -302,7 +306,7 @@ public class Assignment5 {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Assignment5 assignment = new Assignment5();
         assignment.venderMachine();
     }
