@@ -85,7 +85,7 @@ public class Assignment5 {
             // 投入コインの合計金額を表示
             System.out.println("投入コインの合計金額: " + inputTotal + "円");
             // お釣りの金額
-            int changeTotal =  productPrice - inputTotal;
+            int changeTotal =  inputTotal - productPrice;
             if (changeTotal == 0) {
                 System.out.println("お釣りはありません。");
                 // 投入コインを売上コインリストに追加
@@ -194,7 +194,7 @@ public class Assignment5 {
             for (int i = 0; i < COIN_ARRAY.length; i++) {
                 if (inputCoin.intValue() == COIN_ARRAY[i]) {
                     isExist = true;
-                    break;
+                    continue;
                 }
             }
             if (!isExist) {
@@ -203,10 +203,7 @@ public class Assignment5 {
             }
             // 投入コインのリストに追加
             inputCoinList.add(inputCoin);
-            // 投入コインの合計金額を計算
-            for (Integer coin : inputCoinList) {
-                inputTotal += coin.intValue();
-            }
+            inputTotal += inputCoin.intValue();
         }
         // 投入コインリストを返却
         return inputCoinList;
@@ -218,6 +215,7 @@ public class Assignment5 {
      * @return お釣りコインのリスト
      */
     private List<Integer> getCalculateChange(int changeTotal) throws OutOfChangeException {
+        System.out.println("お釣りの計算を開始します。 お釣り金額: " + changeTotal + "円");
         // お釣りコインのリスト
         List<Integer> changeCoinList = new ArrayList<>();
         // お釣りの計算
@@ -225,6 +223,7 @@ public class Assignment5 {
         for (int i = 0; i < COIN_ARRAY.length; i++) {
             // 必要コイン枚数
             int numberOfCoin = remChange / COIN_ARRAY[i];
+            System.out.println(COIN_ARRAY[i] + "円コインの必要枚数: " + numberOfCoin);
             // まだ残るお釣り金額
             // remChange = remChange % COIN_ARRAY[i]; <= つり銭切れを考慮しないケース
             // 残り枚数がない場合は次のコインへ
