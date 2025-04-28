@@ -15,9 +15,9 @@ import com.alphacmc.alphajtest.bean.ProductBean;
 
 public class Assignment4 {
 
-    private static final String FILE_NAME_ALL = "社員マスタ.csv";
-    private static final String FILE_NAME_FULLTIME = "正社員マスタ.csv";
-    private static final String FILE_NAME_CONTRACT = "契約社員マスタ.csv";
+    private static final String FILE_NAME_ALL = "C:\\Users\\alphauser\\git\\alphajtest\\data\\社員情報ファイル.csv";
+    private static final String FILE_NAME_FULLTIME = "C:\\Users\\alphauser\\git\\alphajtest\\data\\正社員マスタ.csv";
+    private static final String FILE_NAME_CONTRACT = "C:\\Users\\alphauser\\git\\alphajtest\\data\\契約社員マスタ.csv";
 
     // 正社員リスト
     private List<EmployeeBean> employeeFullList = new ArrayList<>();
@@ -30,6 +30,9 @@ public class Assignment4 {
         assignment4.writeEmployeeList();
     }
 
+    /**
+     * 社員マスタのCSVファイルを読み込む
+     */
     public void getEmployeeList() {
         List<ProductBean> products = new ArrayList<>();
         // テキストファイルの読み込みサンプル
@@ -44,17 +47,16 @@ public class Assignment4 {
             while ((line = br.readLine()) != null) {
                 //カウンタをインクリメント
                 count++;
+                // ヘッダ行はスキップ
+                if (count == 1) {
+                    continue;
+                }
                 //カンマで分割した内容を配列に格納する
                 String[] data = line.split(",");
                 if (data.length < 8) {
                     System.out.println("データ項目不足。count=" + count);
                     continue;
                 }
-
-                // 1行目はヘッダなのでスキップ
-                if (count == 1) {
-                    continue;
-                }                
                 
                 // 社員IDのチェック
                 String employeeId = data[0].trim();
@@ -88,7 +90,7 @@ public class Assignment4 {
                 
                 // 性別のチェック
                 String gender = data[2].trim();
-                if (!"男".equals(gender) && "女".equals(gender)) {
+                if (!"男".equals(gender) && !"女".equals(gender)) {
                     System.out.println("性別が不正です。count=" + count + "  社員コード=" + employeeId + "  性別=" + gender);
                     continue;
                 }
@@ -147,7 +149,7 @@ public class Assignment4 {
                     continue;
                 }
                 // TODO:ハイフンありなし混在のチェック
-                if (!phoneNumber.matches("\\d{2,4}-\\d{2,4}-\\d{4}")) {
+                if (!phoneNumber.matches("\\d{2,4}-\\d{2,4}-\\d{4}") && !phoneNumber.matches("\\d{10,11}")) {
                     System.out.println("電話番号が不正です。count=" + count + "  社員コード=" + employeeId + "  電話番号=" + phoneNumber);
                     continue;
                 }
@@ -178,11 +180,16 @@ public class Assignment4 {
         }
     }
 
+    /**
+     * 社員マスタのCSVファイルを出力する
+     */
     public void writeEmployeeList() {
         // 正社員リストの書き込み
+        System.out.println("正社員リストの書き込み開始 count=" + employeeFullList.size());
         writeCSV(employeeFullList, FILE_NAME_FULLTIME);
 
         // 契約社員リストの書き込み
+        System.out.println("契約社員リストの書き込み開始 count=" + employeeContractList.size());
         writeCSV(employeeContractList, FILE_NAME_CONTRACT);
     }
 
