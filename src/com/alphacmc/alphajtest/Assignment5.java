@@ -131,11 +131,12 @@ public class Assignment5 {
      */
     private int selectProduct() {
         ProductBean selectProductBean = null;
+        // 商品が選択されない限り繰り返す
         while(selectProductBean == null) {
-            // 商品リストの表示
             System.out.println("商品リストを表示します。");
+            // 商品コード順にソート
             productList.sort((p1, p2) -> Integer.compare(p1.getProductId(), p2.getProductId()));
-
+            // 商品リストの表示
             for (ProductBean product : productList) {
                 System.out.println(product.getProductId() + ": " + product.getProductName() + " - " + product.getProductPrice() + "円");
             }
