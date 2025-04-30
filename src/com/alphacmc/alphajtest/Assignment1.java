@@ -3,7 +3,7 @@ package com.alphacmc.alphajtest;
 import java.util.Calendar;
 import java.util.Scanner;
 
-public class Assignment1 {
+public class Assignment1 { 
     public static void main(String[] args) {
         
         Assignment1 assignment = new Assignment1();
