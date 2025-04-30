@@ -11,7 +11,7 @@ import com.alphacmc.alphajtest.csv.ProductCsvLoader;
 import com.alphacmc.alphajtest.exception.OutOfChangeException;
 
 public class Assignment5 {
-    // コインの種類 
+    // コインの種類
     private static final int[] COIN_ARRAY = {500, 100, 50, 10, 5, 1};
     private static final String CSV_FILE_NAME = "C:\\Users\\alphauser\\git\\alphajtest\\data\\課題5_入力データ.csv";
     // 売上コインのリスト
