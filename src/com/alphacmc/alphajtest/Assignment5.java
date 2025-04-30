@@ -22,7 +22,7 @@ public class Assignment5 {
     private boolean isProductListAccess = false;
     // 処理終了フラグ
     private boolean isContinue = true;
-    // コンソール入力
+    // コンソール入力（キーボードから入力）
     private Scanner scanner = new Scanner(System.in);
 
     // Timer Object to schedule tasks
