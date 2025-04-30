@@ -10,7 +10,8 @@ import com.alphacmc.alphajtest.bean.ProductBean;
 
 public class Assignment3 {
 
-    private static final String FILE_NAME = "C:\\Users\\alphauser\\git\\alphajtest\\data\\課題3_商品リスト.csv";
+    private static final String FILE_NAME = "C:\\dev\\git\\alphajtest\\data\\課題3_商品リスト.csv";
+
     public static void main(String[] args) {
         Assignment3 assignment3 = new Assignment3();
         assignment3.getProducts();
@@ -20,20 +21,20 @@ public class Assignment3 {
         List<ProductBean> products = new ArrayList<>();
         // テキストファイルの読み込みサンプル
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(FILE_NAME)))) {
-            //読み込み行
+            // 読み込み行
             String line;
-            //読み込み行カウンタ
+            // 読み込み行カウンタ
             int count = 0;
 
-            //1行ずつ読み込みを行う(読込エリア line が NULL であれば、EOF 状態)
+            // 1行ずつ読み込みを行う(読込エリア line が NULL であれば、EOF 状態)
             while ((line = br.readLine()) != null) {
-                //カウンタをインクリメント
+                // カウンタをインクリメント
                 count++;
                 // ヘッダ行はスキップ
                 if (count == 1) {
                     continue;
                 }
-                //カンマで分割した内容を配列に格納する
+                // カンマで分割した内容を配列に格納する
                 String[] data = line.split(",");
                 if (data.length < 4) {
                     System.out.println("データ項目不足。count=" + count);
@@ -55,7 +56,7 @@ public class Assignment3 {
                     System.out.println("商品名が不正です。count=" + count);
                     continue;
                 }
- 
+
                 // 商品価格のチェック
                 Integer productPrice = checkInteger(data[2].trim(), 9);
                 if (productPrice == null) {
@@ -92,7 +93,7 @@ public class Assignment3 {
                 }
             }
             System.out.println("CSVファイルレコードカウント:" + count);
-        // 例外処理（ファイルが見つからない？など）
+            // 例外処理（ファイルが見つからない？など）
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,6 +109,7 @@ public class Assignment3 {
 
     /**
      * 文字列桁数のチェック
+     * 
      * @param str
      * @return
      */
@@ -120,6 +122,7 @@ public class Assignment3 {
 
     /**
      * 整数桁数のチェック
+     * 
      * @param str
      * @return
      */
@@ -133,5 +136,5 @@ public class Assignment3 {
             return null;
         }
     }
-    
+
 }

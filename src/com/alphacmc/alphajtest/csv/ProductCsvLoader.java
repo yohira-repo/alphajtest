@@ -4,6 +4,11 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,33 +18,40 @@ public class ProductCsvLoader {
     // コインの種類
     private static final int[] COIN_ARRAY = { 500, 100, 50, 10, 5, 1 };
 
-    private  List<Integer> initialSalesCoin;
+    private List<Integer> initialSalesCoin;
 
     private List<ProductBean> products;
 
+    // CSVファイル名
+    private String filePathName;
+
     /**
      * 商品情報の取得
+     * 
      * @param filePathName
      * @return boolean <true>:成功、<false>:ファイルが存在しない
      * @throws Exception
      */
-    public boolean getProducts(String filePathName, List<ProductBean> products, List<Integer> SalesCoin) throws Exception {
+    public boolean getProducts(String filePathName, List<ProductBean> products, List<Integer> SalesCoin)
+            throws Exception {
 
+        this.filePathName = filePathName;
+        System.out.println("CSVファイル名:" + filePathName);
         this.products = products;
         this.initialSalesCoin = SalesCoin;
-   
-        // テキストファイルの読み込みサンプル
+
+        // テキストファイルの読み込み
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePathName)))) {
-            //読み込み行
+            // 読み込み行
             String line;
-            //読み込み行カウンタ
+            // 読み込み行カウンタ
             int count = 0;
 
-            //1行ずつ読み込みを行う(読込エリア line が NULL であれば、EOF 状態)
+            // 1行ずつ読み込みを行う(読込エリア line が NULL であれば、EOF 状態)
             while ((line = br.readLine()) != null) {
-                //カウンタをインクリメント
+                // カウンタをインクリメント
                 count++;
-                //カンマで分割した内容を配列に格納する（マルチフォーマット）
+                // カンマで分割した内容を配列に格納する（マルチフォーマット）
                 String[] data = line.split(",");
                 if (data.length < 2) {
                     System.out.println("データ項目不足。count=" + count);
@@ -78,6 +90,7 @@ public class ProductCsvLoader {
                         continue;
                     }
                     // 初期売上金情報の追加
+                    System.out.println("デバッグ:" + line);
                     initialSalesCoin.addAll(initSalesCoin);
                 } else {
                     System.out.println("レコード区分が不正です。count=" + count);
@@ -86,15 +99,37 @@ public class ProductCsvLoader {
             }
             System.out.println("CSVファイルレコードカウント:" + count);
             return true;
-        // 例外処理（ファイルが見つからない？など）
+            // 例外処理（ファイルが見つからない？など）
         } catch (FileNotFoundException e) {
             System.out.println("ファイルが存在しません:" + filePathName);
             return false;
         }
     }
 
+    public void moveCsvFileToBackup() {
+        // CSVファイルパス
+        Path filePath = Paths.get(filePathName);
+        // バックアップディレクトリ
+        Path backupDirectory = filePath.getParent().resolve("backup");
+        // バックアップフォルダに移動する
+        try {
+            // バックアップフォルダが存在しない場合は作成する
+            if (!Files.exists(backupDirectory)) {
+                Files.createDirectories(backupDirectory);
+            }
+            // タイムスタンプを取得
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+            // フォルダにファイル名を追加
+            Path newFilePath = backupDirectory.resolve(filePath.getFileName() + "_" + timestamp);
+            Files.move(filePath, newFilePath);
+        } catch (java.io.IOException e) {
+            System.out.println("バックアップフォルダに移動できませんでした。");
+        }
+    }
+
     /**
      * 初期売上金情報の取得
+     * 
      * @param item[]
      * @return
      */
@@ -137,6 +172,7 @@ public class ProductCsvLoader {
 
     /**
      * 商品情報の取得
+     * 
      * @param item[]
      * @return
      */
@@ -176,7 +212,7 @@ public class ProductCsvLoader {
             // 重複ありで商品名が入っている場合は、商品名更新
             if (findIndex != -1) {
                 this.products.get(findIndex).setProductName(productName);
-            } else{
+            } else {
                 product.setProductName(productName);
             }
         }
@@ -192,7 +228,7 @@ public class ProductCsvLoader {
             // 重複ありで商品価格が入っている場合は、商品価格更新
             if (findIndex != -1) {
                 this.products.get(findIndex).setProductPrice(productPrice.intValue());
-            } else{
+            } else {
                 product.setProductPrice(productPrice.intValue());
             }
         }
@@ -208,7 +244,7 @@ public class ProductCsvLoader {
             // 重複ありで商品在庫数が入っている場合は、商品在庫数更新
             if (findIndex != -1) {
                 this.products.get(findIndex).setProductStock(productStock.intValue());
-            } else{
+            } else {
                 product.setProductStock(productStock.intValue());
             }
         }
@@ -218,6 +254,7 @@ public class ProductCsvLoader {
 
     /**
      * 文字列桁数のチェック
+     * 
      * @param str
      * @return
      */
@@ -230,6 +267,7 @@ public class ProductCsvLoader {
 
     /**
      * 整数桁数のチェック
+     * 
      * @param str
      * @return
      */

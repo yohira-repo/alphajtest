@@ -15,9 +15,9 @@ import com.alphacmc.alphajtest.bean.ProductBean;
 
 public class Assignment4 {
 
-    private static final String FILE_NAME_ALL = "C:\\Users\\alphauser\\git\\alphajtest\\data\\課題4_社員情報ファイル.csv";
-    private static final String FILE_NAME_FULLTIME = "C:\\Users\\alphauser\\git\\alphajtest\\data\\課題4_正社員マスタ.csv";
-    private static final String FILE_NAME_CONTRACT = "C:\\Users\\alphauser\\git\\alphajtest\\data\\課題4_契約社員マスタ.csv";
+    private static final String FILE_NAME_ALL = "C:\\dev\\git\\alphajtest\\data\\課題4_社員情報ファイル.csv";
+    private static final String FILE_NAME_FULLTIME = "C:\\dev\\git\\alphajtest\\data\\課題4_正社員マスタ.csv";
+    private static final String FILE_NAME_CONTRACT = "C:\\dev\\git\\alphajtest\\data\\課題4_契約社員マスタ.csv";
 
     // 正社員リスト
     private List<EmployeeBean> employeeFullList = new ArrayList<>();
@@ -36,40 +36,39 @@ public class Assignment4 {
     public void getEmployeeList() {
         List<ProductBean> products = new ArrayList<>();
         // テキストファイルの読み込みサンプル
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(FILE_NAME_ALL)))
-             ){
-            //読み込み行
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(FILE_NAME_ALL)))) {
+            // 読み込み行
             String line;
-            //読み込み行カウンタ
+            // 読み込み行カウンタ
             int count = 0;
 
-            //1行ずつ読み込みを行う(読込エリア line が NULL であれば、EOF 状態)
+            // 1行ずつ読み込みを行う(読込エリア line が NULL であれば、EOF 状態)
             while ((line = br.readLine()) != null) {
-                //カウンタをインクリメント
+                // カウンタをインクリメント
                 count++;
                 // ヘッダ行はスキップ
                 if (count == 1) {
                     continue;
                 }
-                //カンマで分割した内容を配列に格納する
+                // カンマで分割した内容を配列に格納する
                 String[] data = line.split(",");
                 if (data.length < 8) {
                     System.out.println("データ項目不足。count=" + count);
                     continue;
                 }
-                
+
                 // 社員IDのチェック
                 String employeeId = data[0].trim();
-                if (employeeId ==null || employeeId.isEmpty() || employeeId.length() != 4) {
+                if (employeeId == null || employeeId.isEmpty() || employeeId.length() != 4) {
                     System.out.println("社員IDが不正です。count=" + count);
                     continue;
                 }
-                if (!"C".equals(employeeId.substring(0,1))
-                    && !"T".equals(employeeId.substring(0,1))) {
-                        System.out.println("社員IDが不正です。count=" + count);
-                        continue;
+                if (!"C".equals(employeeId.substring(0, 1))
+                        && !"T".equals(employeeId.substring(0, 1))) {
+                    System.out.println("社員IDが不正です。count=" + count);
+                    continue;
                 }
-                // 社員IDの数字部分をチェック 
+                // 社員IDの数字部分をチェック
                 Integer employeeIdNo = checkInteger(employeeId.substring(1), 4);
                 if (employeeIdNo == null) {
                     System.out.println("社員IDが不正です。count=" + count);
@@ -87,7 +86,7 @@ public class Assignment4 {
                     System.out.println("生年月日が不正です。count=" + count + "  社員コード=" + employeeId + "  生年月日=" + birthDate);
                     continue;
                 }
-                
+
                 // 性別のチェック
                 String gender = data[2].trim();
                 if (!"男".equals(gender) && !"女".equals(gender)) {
@@ -119,7 +118,7 @@ public class Assignment4 {
                 if (!postalCode.matches("\\d{7}")) {
                     System.out.println("郵便番号が不正です。count=" + count + "  社員コード=" + employeeId + "  郵便番号=" + postalCode);
                     continue;
-                }  
+                }
 
                 // 住所のチェック
                 String address = data[5].trim();
@@ -133,11 +132,13 @@ public class Assignment4 {
                 String emailAddress = data[6].trim();
                 emailAddress = checkString(emailAddress, 128);
                 if (emailAddress == null) {
-                    System.out.println("メールアドレスが不正です。count=" + count + "  社員コード=" + employeeId + "  メールアドレス=" + emailAddress);
+                    System.out.println(
+                            "メールアドレスが不正です。count=" + count + "  社員コード=" + employeeId + "  メールアドレス=" + emailAddress);
                     continue;
                 }
                 if (!emailAddress.matches("^[\\w\\.-]+@[\\w\\.-]+\\.\\w+$")) {
-                    System.out.println("メールアドレスが不正です。count=" + count + "  社員コード=" + employeeId + "  メールアドレス=" + emailAddress);
+                    System.out.println(
+                            "メールアドレスが不正です。count=" + count + "  社員コード=" + employeeId + "  メールアドレス=" + emailAddress);
                     continue;
                 }
 
@@ -167,7 +168,7 @@ public class Assignment4 {
                 employee.setPhoneNumber(phoneNumber);
 
                 // 正社員と契約社員で振り分ける
-                if (!"C".equals(employeeId.substring(0,1))) {
+                if (!"C".equals(employeeId.substring(0, 1))) {
                     // 正社員
                     employeeFullList.add(employee);
                 } else {
@@ -195,6 +196,7 @@ public class Assignment4 {
 
     /**
      * 文字列桁数のチェック
+     * 
      * @param str
      * @return
      */
@@ -207,6 +209,7 @@ public class Assignment4 {
 
     /**
      * 整数桁数のチェック
+     * 
      * @param str
      * @return
      */
@@ -223,6 +226,7 @@ public class Assignment4 {
 
     /**
      * 日付のチェック
+     * 
      * @param str
      * @return
      */
@@ -241,19 +245,20 @@ public class Assignment4 {
             int day = Integer.parseInt(dateParts[2]);
             Calendar cal = Calendar.getInstance();
             // 厳密な日付チェックを有効にする
-            cal.setLenient(false); 
-            // 月は0から始まるので-1する 
-            cal.set(year, month - 1, day); 
+            cal.setLenient(false);
+            // 月は0から始まるので-1する
+            cal.set(year, month - 1, day);
             // 日付を取得して例外が発生しないか確認
-            cal.getTime(); 
+            cal.getTime();
         } catch (IllegalArgumentException e) {
             return null; // 日付が不正な場合はnullを返す
         }
-        return str.replaceAll("/", "");       
+        return str.replaceAll("/", "");
     }
 
     /**
      * 社員マスタのCSVファイルを出力する
+     * 
      * @param employeeList
      * @param fileName
      */
@@ -267,15 +272,16 @@ public class Assignment4 {
             // データ行の書き込み
             for (EmployeeBean employee : employeeList) {
                 String line = String.join(",", employee.getEmployeeId(), employee.getBirthDate(), employee.getGender(),
-                employee.getJoinDate(), employee.getPostalCode(), employee.getAddress(), employee.getEmailAddress(),
-                   employee.getPhoneNumber());
-                // 1行ずつ書き込み   
+                        employee.getJoinDate(), employee.getPostalCode(), employee.getAddress(),
+                        employee.getEmailAddress(),
+                        employee.getPhoneNumber());
+                // 1行ずつ書き込み
                 bw.write(line);
                 // 改行コードの書き込み
                 bw.newLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }   
+        }
     }
 }
