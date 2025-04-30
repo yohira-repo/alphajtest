@@ -2,9 +2,9 @@ package com.alphacmc.alphajtest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Scanner;
 
 import com.alphacmc.alphajtest.bean.ProductBean;
 import com.alphacmc.alphajtest.csv.ProductCsvLoader;
@@ -12,7 +12,7 @@ import com.alphacmc.alphajtest.exception.OutOfChangeException;
 
 public class Assignment5 {
     // コインの種類(500, 100, 50, 10, 5, 1)
-    private static final int[] COIN_ARRAY = {500, 100, 50, 10, 5, 1};
+    private static final int[] COIN_ARRAY = { 500, 100, 50, 10, 5, 1 };
     private static final String CSV_FILE_NAME = "C:\\Users\\alphauser\\git\\alphajtest\\data\\課題5_入力データ.csv";
     // 売上コインのリスト
     private List<Integer> salesContList = new ArrayList<>();
@@ -35,7 +35,7 @@ public class Assignment5 {
     private TimerTask csvTask = new TimerTask() {
         public void run() {
             // 商品リストフラグ待ち合わせ
-            waitProductListAccess ();
+            waitProductListAccess();
             isProductListAccess = true;
             try {
                 // 商品リストの取得
@@ -62,14 +62,18 @@ public class Assignment5 {
         }
     };
 
-    // Method to print a message
+    /**
+     * 商品自販機のメイン処理
+     * 
+     * @throws Exception
+     */
     public void venderMachine() throws Exception {
         // 商品リストの構築(csvファイルから読み込む)
         timer.schedule(this.csvTask, 0, 3000000);
         // 商品リストの取得タスクをスケジュール);
         timer.schedule(this.stockCheckTask, 600000, 300000);
         Thread.sleep(10000);
-        waitProductListAccess ();
+        waitProductListAccess();
 
         while (isContinue) {
             // 商品選択
@@ -85,7 +89,7 @@ public class Assignment5 {
             // 投入コインの合計金額を表示
             System.out.println("投入コインの合計金額: " + inputTotal + "円");
             // お釣りの金額
-            int changeTotal =  inputTotal - productPrice;
+            int changeTotal = inputTotal - productPrice;
             if (changeTotal == 0) {
                 System.out.println("お釣りはありません。");
                 // 投入コインを売上コインリストに追加
@@ -94,7 +98,7 @@ public class Assignment5 {
                 }
                 continue;
             }
-            // お釣りリスト         
+            // お釣りリスト
             List<Integer> changeCoinList = new ArrayList<Integer>();
             try {
                 // お釣りの計算
@@ -116,7 +120,7 @@ public class Assignment5 {
             for (Integer coin : changeCoinList) {
                 System.out.println(coin + "円");
             }
-        } 
+        }
         // 入力終了
         scanner.close();
         // タイマータスクの停止
@@ -126,19 +130,21 @@ public class Assignment5 {
 
     /**
      * 商品選択
+     * 
      * @return 選択商品価格
      * 
      */
     private int selectProduct() {
         ProductBean selectProductBean = null;
         // 商品が選択されない限り繰り返す
-        while(selectProductBean == null) {
+        while (selectProductBean == null) {
             System.out.println("商品リストを表示します。");
             // 商品コード順にソート
             productList.sort((p1, p2) -> Integer.compare(p1.getProductId(), p2.getProductId()));
             // 商品リストの表示
             for (ProductBean product : productList) {
-                System.out.println(product.getProductId() + ": " + product.getProductName() + " - " + product.getProductPrice() + "円");
+                System.out.println(product.getProductId() + ": " + product.getProductName() + " - "
+                        + product.getProductPrice() + "円");
             }
             // 商品IDの選択
             System.out.print("商品IDを選択してください。");
@@ -165,21 +171,23 @@ public class Assignment5 {
             }
         }
         // 商品選択完了
-        System.out.println("商品選択完了: " + selectProductBean.getProductName() + " - " + selectProductBean.getProductPrice() + "円");
+        System.out.println(
+                "商品選択完了: " + selectProductBean.getProductName() + " - " + selectProductBean.getProductPrice() + "円");
         return selectProductBean.getProductPrice();
     }
 
     /**
      * 投入コイン入力
+     * 
      * @return 投入コインのリスト
      */
     private List<Integer> getInputMony(int getProductPrice) {
-        // 投入コインのリスト    
+        // 投入コインのリスト
         List<Integer> inputCoinList = new ArrayList<>();
         // 投入コインの合計金額
         int inputTotal = 0;
         // 投入コインの合計金額が商品価格以上になるまでループ
-        while(inputTotal < getProductPrice) {
+        while (inputTotal < getProductPrice) {
             // 投入コインの選択
             System.out.print("投入コインを選択してください。");
             String strInputCoin = scanner.nextLine();
@@ -211,6 +219,7 @@ public class Assignment5 {
 
     /**
      * お釣りの計算
+     * 
      * @param changeTotal お釣りの合計金額
      * @return お釣りコインのリスト
      */
@@ -291,6 +300,7 @@ public class Assignment5 {
 
     /**
      * 整数桁数のチェック
+     * 
      * @param str
      * @return
      */
@@ -311,4 +321,3 @@ public class Assignment5 {
     }
 
 }
-
