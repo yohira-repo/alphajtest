@@ -11,14 +11,14 @@ import com.alphacmc.alphajtest.csv.ProductCsvLoader;
 import com.alphacmc.alphajtest.exception.OutOfChangeException;
 
 public class Assignment5 {
-    // コインの種類
+    // コインの種類(500, 100, 50, 10, 5, 1)
     private static final int[] COIN_ARRAY = {500, 100, 50, 10, 5, 1};
     private static final String CSV_FILE_NAME = "C:\\Users\\alphauser\\git\\alphajtest\\data\\課題5_入力データ.csv";
     // 売上コインのリスト
     private List<Integer> salesContList = new ArrayList<>();
     // 商品リスト
     private List<ProductBean> productList = new ArrayList<>();
-    // 商品リストのアクセス排他フラグ
+    // 商品リストのアクセス排他フラグ（true:使用中）
     private boolean isProductListAccess = false;
     // 処理終了フラグ
     private boolean isContinue = true;
